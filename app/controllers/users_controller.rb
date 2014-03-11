@@ -47,6 +47,8 @@ class UsersController < ApplicationController
 
   private
 
+# ADD: Signed-in users have no reason to access the new and create actions in the Users controller. Arrange for such users to be redirected to the root URL if they do try to hit those pages.
+
     def signed_in_user
       unless signed_in?
         store_location

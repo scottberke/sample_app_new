@@ -14,7 +14,7 @@ require 'spec_helper'
 describe User do
 
 	before { @user = User.new(name: "Example User", email: "user@example.com",
-															password: "foobar", password_confirmation: "foobar" )}
+															password: "foobar", password_confirmation: "foobar") }
 
 	subject { @user }
 
@@ -32,6 +32,18 @@ describe User do
 	it "should be valid" do
 		should be_valid
 		should_not be_admin
+	end
+
+	describe "accessible attributes" do
+		it "should not allow access to admin" do
+			expect do
+				User.new(name: "Example User",
+									email: "user@example.com",
+									password: "foobar",
+									password_confirmation: "foobar",
+									admin: true)
+			end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+		end
 	end
 
 	describe "with admin attribute set to 'true' " do
