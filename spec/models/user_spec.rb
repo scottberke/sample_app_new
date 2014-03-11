@@ -24,10 +24,23 @@ describe User do
 	it { should respond_to(:password)}
 	it { should respond_to(:password_confirmation)}
 	it { should respond_to(:remember_token)}
+	it { should respond_to(:admin) }
 	it { should respond_to(:authenticate)}
+
+
 
 	it "should be valid" do
 		should be_valid
+		should_not be_admin
+	end
+
+	describe "with admin attribute set to 'true' " do
+		before do
+			@user.save!
+			@user.toggle!(:admin)
+		end
+
+		it { should be_admin }
 	end
 
 	describe "when name is not present" do
@@ -113,7 +126,7 @@ describe User do
 		let(:found_user) { User.find_by_email(@user.email) }
 
 		describe "with valid password" do
-			it { should == found_user.authenticate(@user.password)}
+			it { should == found_user.authenticate(@user.password) }
 		end
 
 		describe "with invalid password" do
