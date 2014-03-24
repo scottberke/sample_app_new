@@ -50,7 +50,10 @@ describe "User Pages" do
 		end
 	end
 
-	describe " User pages" do
+	describe "User pages" do
+		let(:u1) { FactoryGirl.create(:user, name: "Fred", email: "Fred@example.com") }
+		let!(:mu1) { FactoryGirl.create(:micropost, user: u1, content: "bar") }
+
 		before do
 			sign_in FactoryGirl.create(:user)
 			FactoryGirl.create(:user, name: "Bob", email: "bob@example.com")
@@ -65,6 +68,11 @@ describe "User Pages" do
 			User.all.each do |user|
 				page.should have_selector('li', 	text: user.name)
 			end
+		end
+
+		it "should not have delete link on posts created by another user" do
+			visit user_path(u1)
+			page.should_not have_link('delete')
 		end
 	end
 
